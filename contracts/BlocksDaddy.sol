@@ -3,4 +3,6 @@ pragma solidity ^0.8.9;
 
 contract BlocksDaddy {
     string public name = "BlocksDaddy";
+
+    constructor() public {}
 }
