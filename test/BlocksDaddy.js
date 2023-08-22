@@ -1,5 +1,6 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
+const { boolean } = require("hardhat/internal/core/params/argumentTypes");
 
 const tokens = (n) => {
   return ethers.utils.parseUnits(n.toString(), "ether");
@@ -47,6 +48,11 @@ describe("BlocksDaddy", () => {
       const result = await blocksDaddy.maxSupply();
       expect(result).to.be.equal(1);
     });
+
+    it("returns the Total Supply", async () => {
+      const result = await blocksDaddy.totalSupply();
+      expect(result).to.be.equal(0);
+    });
   });
 
   describe("domain", () => {
@@ -55,6 +61,33 @@ describe("BlocksDaddy", () => {
       expect(domain.name).to.be.equal("john.blocks");
       expect(domain.cost).to.be.equal(tokens(10));
       expect(domain.isOwned).to.be.equal(false);
+    });
+  });
+
+  describe("Minting", () => {
+    const ID = 1;
+    const AMOUNT = tokens(10);
+
+    beforeEach(async () => {
+      const transaction = await blocksDaddy
+        .connect(owner1)
+        .mint(ID, { value: AMOUNT });
+      await transaction.wait();
+    });
+
+    it("Updates the Owner", async () => {
+      const owner = await blocksDaddy.ownerOf(ID);
+      expect(owner).to.be.equal(owner1.address);
+    });
+
+    it("updates the domain status", async () => {
+      const domain = await blocksDaddy.getDomain(ID);
+      expect(domain.isOwned).to.be.equal(true);
+    });
+
+    it("Updates the Balance", async () => {
+      const balance = await blocksDaddy.getBalance();
+      expect(balance).to.be.equal(AMOUNT);
     });
   });
 });
