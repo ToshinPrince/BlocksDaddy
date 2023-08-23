@@ -90,4 +90,34 @@ describe("BlocksDaddy", () => {
       expect(balance).to.be.equal(AMOUNT);
     });
   });
+
+  describe("Withdrawing", () => {
+    const ID = 1;
+    const AMOUNT = ethers.utils.parseUnits("10", "ether");
+
+    let balanceBefore;
+
+    beforeEach(async () => {
+      balanceBefore = await ethers.provider.getBalance(deployer.address);
+
+      let transaction = await blocksDaddy
+        .connect(owner1)
+        .mint(ID, { value: AMOUNT });
+
+      await transaction.wait();
+
+      transaction = await blocksDaddy.withdraw();
+      await transaction.wait();
+    });
+
+    it("Updates the owner balance", async () => {
+      const balanceAfter = await ethers.provider.getBalance(deployer.address);
+      expect(balanceAfter).to.be.greaterThan(balanceBefore);
+    });
+
+    it("updates the Contract Balance", async () => {
+      const result = await blocksDaddy.getBalance();
+      expect(result).to.be.equal(0);
+    });
+  });
 });
