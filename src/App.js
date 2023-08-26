@@ -31,8 +31,8 @@ function App() {
   return (
     <div>
       <div className="cards__section">
+        <Navigation account={account} setAccount={setAccount} />
         <h2 className="cards__title">Welcome to Blocks Daddy</h2>
-        <h1>{account}</h1>
       </div>
     </div>
   );
