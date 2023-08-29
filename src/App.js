@@ -11,18 +11,43 @@ import BlocksDaddy from "./abis/BlocksDaddy.json";
 
 // Config
 import config from "./config.json";
+import { use } from "chai";
 
 function App() {
   const [provider, setProvider] = useState(null);
   const [account, setAccount] = useState(null);
+  const [blocksDaddy, setBlocksDaddy] = useState(null);
+  const [domains, setDomains] = useState([]);
 
   const loadBlockchainData = async () => {
+    //Provider
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     setProvider(provider);
 
+    //Network
     const network = await provider.getNetwork();
     console.log(network);
 
+    //js Instance of Contract
+    const blocksDaddy = new ethers.Contract(
+      config[network.chainId].BlocksDaddy.address,
+      BlocksDaddy,
+      provider
+    );
+    setBlocksDaddy(blocksDaddy);
+
+    const maxSupply = await blocksDaddy.maxSupply();
+    console.log(maxSupply.toString());
+
+    const domains = [];
+    for (var i = 1; i <= maxSupply; i++) {
+      const domain = await blocksDaddy.getDomain(i);
+      domains.push(domain);
+    }
+    setDomains(domains);
+    console.log(domains);
+
+    //On Account Change
     window.ethereum.on("accountsChanged", async () => {
       const accounts = await window.ethereum.request({
         method: "eth_requestAccounts",
@@ -30,12 +55,6 @@ function App() {
       const account = ethers.utils.getAddress(accounts[0]);
       setAccount(account);
     });
-    // const accounts = await window.ethereum.request({
-    //   method: "eth_requestAccounts",
-    // });
-    // const account = ethers.utils.getAddress(accounts[0]);
-    // console.log(account);
-    // setAccount(account);
   };
 
   useEffect(() => {
@@ -54,7 +73,16 @@ function App() {
         </p>
 
         <hr />
-        <div className="cards"></div>
+        <div className="cards">
+          {domains.map((domain, index) => (
+            <Domain
+              domain={domain}
+              blocksDaddy={blocksDaddy}
+              provider={provider}
+              id={index + 1}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
