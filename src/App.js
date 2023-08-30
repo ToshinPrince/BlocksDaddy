@@ -26,7 +26,7 @@ function App() {
 
     //Network
     const network = await provider.getNetwork();
-    console.log(network);
+    // console.log(network);
 
     //js Instance of Contract
     const blocksDaddy = new ethers.Contract(
@@ -37,7 +37,7 @@ function App() {
     setBlocksDaddy(blocksDaddy);
 
     const maxSupply = await blocksDaddy.maxSupply();
-    console.log(maxSupply.toString());
+    // console.log(maxSupply.toString());
 
     const domains = [];
     for (var i = 1; i <= maxSupply; i++) {
@@ -45,7 +45,7 @@ function App() {
       domains.push(domain);
     }
     setDomains(domains);
-    console.log(domains);
+    // console.log(domains);
 
     //On Account Change
     window.ethereum.on("accountsChanged", async () => {
@@ -76,6 +76,7 @@ function App() {
         <div className="cards">
           {domains.map((domain, index) => (
             <Domain
+              key={index}
               domain={domain}
               blocksDaddy={blocksDaddy}
               provider={provider}
