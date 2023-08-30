@@ -2,22 +2,70 @@ import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 
 const Domain = ({ domain, blocksDaddy, provider, id }) => {
+  const [owner, setOwner] = useState(null);
+  const [hasSold, setHasSold] = useState(false);
+
+  const getOwner = async () => {
+    if (domain.isOwned || hasSold) {
+      const owner = await blocksDaddy.ownerOf(id);
+      setOwner(owner);
+    }
+  };
+
+  const buyHandler = async () => {
+    const signer = await provider.getSigner();
+
+    const transaction = await blocksDaddy
+      .connect(signer)
+      .mint(id, { value: domain.cost });
+    await transaction.wait();
+
+    setHasSold(true);
+  };
+
+  useEffect(() => {
+    getOwner();
+  }, [hasSold]);
+
   return (
     <div className="card">
       <div className="card__info">
-        <h3>{domain.name}</h3>
+        <h3>
+          {domain.isOwned ? <del>{domain.name}</del> : <>{domain.name}</>}
+        </h3>
         <p>
-          <>
-            <strong>
-              {ethers.utils.formatUnits(domain.cost.toString(), "ether")}
-            </strong>
-          </>
-          ETH
+          {domain.isOwned || owner ? (
+            <>
+              <small>
+                Owned By:
+                <br />
+                <span>
+                  {owner && owner.slice(0, 6) + "..." + owner.slice(38, 42)}
+                </span>
+              </small>
+            </>
+          ) : (
+            <>
+              <strong>
+                {ethers.utils.formatUnits(domain.cost.toString(), "ether")}
+              </strong>
+              ETH
+            </>
+          )}
         </p>
       </div>
-      <button type="button" className="card__button">
-        Buy
-      </button>
+      {!domain.isOwned && !owner && (
+        <button type="button" className="card__button" onClick={buyHandler}>
+          Buy Now
+        </button>
+      )}
+      {/* {domain.isOwned ? (
+        <></>
+      ) : (
+        <button type="button" className="card__button" onClick={buyHandler}>
+          Buy
+        </button>
+      )} */}
     </div>
   );
 };
