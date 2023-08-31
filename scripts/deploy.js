@@ -23,6 +23,8 @@ async function main() {
   const blocksDaddy = await BlocksDaddy.deploy(NAME, SYMBOL);
   await blocksDaddy.deployed();
 
+  console.log(`Deploying BlocksDaddy Contract at: ${blocksDaddy.address}\n`);
+
   //listing 10 domain names
   const names = [
     "alice.eth",
