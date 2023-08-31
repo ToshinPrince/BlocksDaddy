@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/BlocksDaddy/static/css/main.e94f13ed.css",
+    "main.js": "/BlocksDaddy/static/js/main.52b15a75.js",
+    "static/js/787.192199d0.chunk.js": "/BlocksDaddy/static/js/787.192199d0.chunk.js",
+    "static/media/browser.svg": "/BlocksDaddy/static/media/browser.3a8a3be91d5a6d9a0bf8.svg",
+    "index.html": "/BlocksDaddy/index.html",
+    "static/media/logo.svg": "/BlocksDaddy/static/media/logo.ec4a05ff5c8e6c558f3a23ec84ced2e8.svg",
+    "main.e94f13ed.css.map": "/BlocksDaddy/static/css/main.e94f13ed.css.map",
+    "main.52b15a75.js.map": "/BlocksDaddy/static/js/main.52b15a75.js.map",
+    "787.192199d0.chunk.js.map": "/BlocksDaddy/static/js/787.192199d0.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e94f13ed.css",
+    "static/js/main.52b15a75.js"
+  ]
+}
